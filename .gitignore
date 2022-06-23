@@ -17,3 +17,7 @@
 *.ipr
 .vscode
 /logs/
+
+
+application-*.yml
+!application-env.template.yml

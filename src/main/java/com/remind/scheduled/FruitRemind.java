@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -14,7 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import love.forte.simbot.BotManager;
+import love.forte.simbot.bot.Bot;
+import love.forte.simbot.bot.BotManager;
 
 /**
  * 定时任务，每周三晚上6.30执行
@@ -59,11 +61,14 @@ public class FruitRemind {
         }
         qqSet.forEach(qq -> {
             try {
+                final String msg = content.get(new Random().nextInt(content.size()));
                 // // 发送买水果提醒
-                // botManager.getDefaultBot().getSender().SENDER.sendPrivateMsg(qq, msg);
+                Bot bot = botManager.getDefaultBot();
+                bot.getSender().SENDER.sendPrivateMsg(qq, msg);
                 // // 发送随机喝水图片
-                // botManager.getDefaultBot().getSender().SENDER.sendPrivateMsg(qq, img);
-                // logger.info("正在发送喝水提醒，当前qq={}, 语录={}, img={}", qq, msg, img);
+                bot.getSender().SENDER.sendPrivateMsg(qq, msg);
+                logger.info("正在发送喝水提醒，当前qq={}, 语录={}", qq, msg);
+                bot.close();
             } catch (Exception e) {
                 logger.error("发送喝水提醒异常, qq={}", qq, e);
             }
