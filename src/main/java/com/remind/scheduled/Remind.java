@@ -22,9 +22,9 @@ import love.forte.simbot.bot.BotManager;
  * 定时任务，每周三晚上6.30执行
  */
 @Component
-public class FruitRemind {
+public class Remind {
 
-    final static Logger logger = org.slf4j.LoggerFactory.getLogger(FruitRemind.class);
+    final static Logger logger = org.slf4j.LoggerFactory.getLogger(Remind.class);
     
     @Resource
     private BotManager botManager;
