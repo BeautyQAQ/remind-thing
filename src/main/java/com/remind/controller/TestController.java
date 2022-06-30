@@ -1,24 +1,31 @@
-package com.remind.controller;
+// package com.remind.controller;
 
-import love.forte.simbot.bot.Bot;
-import love.forte.simbot.bot.BotManager;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+// import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+// import com.remind.simple.Send;
 
-@RestController
-@RequestMapping("/test")
-public class TestController {
+// @RestController
+// @RequestMapping("/test")
+// public class TestController {
+    
+//     private final Send send;    
 
-    @Resource
-    private BotManager botManager;
+//     public TestController(Send send) {
+//         this.send = send;
+//     }
 
-    @GetMapping("/sendMessage")
-    public String test(){
-        Bot bot = botManager.getDefaultBot();
-        bot.getSender().SENDER.sendPrivateMsg("1426887150", "测试消息");
-        return "发送成功";
-    }
-}
+//     @Value("${remind.qq}")
+//     private String qq;
+
+//     @GetMapping("/sendMessage")
+//     public String test(){
+//         // Bot bot = botManager.getDefaultBot();
+//         // bot.getSender().SENDER.sendPrivateMsg("1426887150", "测试消息");
+//         // Send send = new Send(get, new MessageExceptionHandling());
+//         send.privates(qq, String.format("执行状态: 自动\n%s", "测试消息"));
+//         return "发送成功";
+//     }
+// }
