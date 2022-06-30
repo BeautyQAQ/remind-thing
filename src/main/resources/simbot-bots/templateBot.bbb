@@ -1,4 +1,6 @@
-
+component=simbot.mirai
+code=12345678
+password=password
 
 # mirai心跳周期. 过长会导致被服务器断开连接. 单位毫秒。
 simbot.component.mirai.heartbeat-period-millis=60000

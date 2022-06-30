@@ -21,3 +21,5 @@
 
 application-*.yml
 !application-env.template.yml
+
+!myBot.bot

@@ -21,7 +21,7 @@ public class Send {
 
     final static Logger log = org.slf4j.LoggerFactory.getLogger(Send.class);
 
-    @Value("${remind.qq}")
+    @Value("${remind.botQQ}")
     private String botQQ;
 
     /**
