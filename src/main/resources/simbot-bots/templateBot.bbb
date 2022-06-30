@@ -1,3 +1,5 @@
+# 此文件后缀改为.bot
+
 component=simbot.mirai
 code=12345678
 password=password
