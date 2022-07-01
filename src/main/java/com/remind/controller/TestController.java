@@ -22,9 +22,6 @@ public class TestController {
 
     @GetMapping("/sendMessage")
     public String test(){
-        // Bot bot = botManager.getDefaultBot();
-        // bot.getSender().SENDER.sendPrivateMsg("1426887150", "测试消息");
-        // Send send = new Send(get, new MessageExceptionHandling());
         send.privates(qq, "测试消息");
         return "发送成功";
     }

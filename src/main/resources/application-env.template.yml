@@ -1,7 +1,7 @@
 #配置提醒的的QQ号，多个QQ用逗号分割
 remind:
   qq: 123456789
-  botQQ: 87654321
+  botQQ: 987654321
 
 simbot:
   core:

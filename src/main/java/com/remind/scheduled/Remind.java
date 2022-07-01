@@ -2,75 +2,60 @@ package com.remind.scheduled;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 import java.util.Set;
-
-import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import love.forte.simbot.bot.Bot;
-import love.forte.simbot.bot.BotManager;
+import com.remind.simple.Send;
 
 /**
- * 定时任务，每周三晚上6.30执行
+ * 定时任务
+ * 每一分钟提醒一次: 0 0/1 * * * ?
+ * 每一小时提醒一次: 0 0 0/1 * * ?
  */
 @Component
 public class Remind {
 
     final static Logger logger = org.slf4j.LoggerFactory.getLogger(Remind.class);
-    
-    @Resource
-    private BotManager botManager;
+
+    private final Send send;
+
+    public Remind(Send send) {
+        this.send = send;
+    }
 
     @Value("${remind.qq}")
     private Set<String> qqSet;
 
     /**
-     * 提醒内容
+     * 每周五晚7点30提醒买水果
      */
-    static List<String> content;
-
-    static {
-        content = new ArrayList<>();
-        logger.info("开始加载提醒内容~~~");
-        // 喝水语录
-        LocalDate now = LocalDate.now();
-        DayOfWeek week = now.getDayOfWeek();
-        content.add("今天是 " + now + "，星期" + week.getValue() + "，改买水果了！");
-    }
-
-    /**
-     * 每一分钟提醒一次: 0 0/1 * * * ?
-     * 每一小时提醒一次: 0 0 0/1 * * ?
-     */
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 30 19 ? * 5")
     public void handler() {
         Calendar calendar = Calendar.getInstance();
         // 获取当前小时
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        // 只在早上9点到晚上8点发送消息提醒
-        if (hour < 9 || hour > 20) {
+        // 只在早上9点到晚上10点发送消息提醒
+        if (hour < 9 || hour > 22) {
             return;
         }
         qqSet.forEach(qq -> {
             try {
-                final String msg = content.get(new Random().nextInt(content.size()));
-                // // 发送买水果提醒
-                Bot bot = botManager.getDefaultBot();
-                bot.getSender().SENDER.sendPrivateMsg(qq, msg);
-                // // 发送随机喝水图片
-                bot.getSender().SENDER.sendPrivateMsg(qq, msg);
-                logger.info("正在发送喝水提醒，当前qq={}, 语录={}", qq, msg);
-                bot.close();
+                logger.info("开始加载提醒内容~~~");
+                // 喝水语录
+                LocalDate now = LocalDate.now();
+                DayOfWeek week = now.getDayOfWeek();
+                String msg = "今天是 " + now + "，星期" + week.getValue() + "，该买水果了！";
+
+                // 发送买水果提醒
+                send.privates(qq, msg);
+                logger.info("正在发送买水果提醒，当前qq={}, 语录={}", qq, msg);
             } catch (Exception e) {
-                logger.error("发送喝水提醒异常, qq={}", qq, e);
+                logger.error("发送买水果提醒异常, qq={}", qq, e);
             }
         });
     }
