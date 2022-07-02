@@ -1,15 +1,23 @@
 package com.remind.simple;
 
+import com.remind.pixiv.Pixiv;
 import love.forte.simbot.api.message.MessageContent;
 import love.forte.simbot.api.message.events.*;
 import love.forte.simbot.bot.Bot;
 import love.forte.simbot.bot.BotManager;
 import love.forte.simbot.component.mirai.message.MiraiMessageContent;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
+import org.jsoup.Connection;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -220,6 +228,23 @@ public class Send {
     public Send(final Get get, final MessageExceptionHandling meh) {
         this.get = get;
         this.meh = meh;
+    }
+
+    public ArrayList<Pixiv> getPixivs(@NotNull Connection connection) throws IOException {
+        Elements json = connection.timeout(10000 * 1000).ignoreContentType(true).get().select("body");
+        // 通过fromObject将json字符串翻译成JSON对象(JSONObject)
+        JSONObject jsonObject = JSONObject.fromObject(json.text());
+        // 上面的jsonObject类型就是json数组如：data:[{"tags":[],"urls":{}}]
+        // 返回的是非单一的json对象
+        JSONArray dataJsonArray = jsonObject.getJSONArray("data");
+        ArrayList<Pixiv> arrayPixiv = new ArrayList<>();
+        for (Object o : dataJsonArray) {
+            // 将获取的单个json字符串翻译成JSONObject
+            JSONObject jsonParts = JSONObject.fromObject(o.toString());
+            // 将json对象翻译成Pixiv对象
+            arrayPixiv.add((Pixiv) JSONObject.toBean(jsonParts, Pixiv.class));
+        }
+        return arrayPixiv;
     }
 }
 
