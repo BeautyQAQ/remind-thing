@@ -21,7 +21,14 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 11
+
+      - name: Download config file and replace
+        run: |
+          git clone git@github.com:BeautyQAQ/my-production-configuration.git
+          mv -f ./my-production-configuration/remind-thing/application-prd.yml ./remind-thing/src/main/resources/application-prd.yml
+          mv -f ./my-production-configuration/remind-thing/bot.bot ./remind-thing/src/main/resources/simbot-bots/application.yml
+
       # 安装maven依赖
       - name: Maven Clean Install
         run: |
@@ -36,30 +43,7 @@ jobs:
         run: |
 
           echo '=====开始构建镜像====='
-          cd how_article
           mvn docker:build
-          cd ..
-
-          echo '=====how_gateway_web====='
-          cd how_gateway_web
-          mvn docker:build
-          cd ..
-
-          echo '=====how_search====='
-          cd how_search
-          mvn docker:build
-          cd ..
-
-          echo '=====how_sms====='
-          cd how_sms
-          mvn docker:build
-          cd ..
-
-          echo '=====how_user====='
-          cd how_user
-          mvn docker:build
-          cd ..
-
           echo '=====镜像构建结束====='
 
       # 登录到 阿里云镜像服务，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
@@ -74,18 +58,5 @@ jobs:
         run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传how_article====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_article
-
-          echo '=====开始上传how_gateway_web====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_gateway_web
-
-          echo '=====开始上传how_search====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_search
-
-          echo '=====开始上传how_sms====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_sms
-
-          echo '=====开始上传how_user====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_user
-
+          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/remind-thing
           echo '=====镜像上传结束====='
