@@ -36,8 +36,8 @@ jobs:
       - name: Download config file and replace
         run: |
           git clone git@github.com:BeautyQAQ/my-production-configuration.git
-          mv -f /home/runner/work/my-production-configuration/remind-thing/application-prd.yml /home/runner/work/remind-thing/src/main/resources/application-prd.yml
-          mv -f /home/runner/work/my-production-configuration/remind-thing/bot.bot /home/runner/work/remind-thing/src/main/resources/simbot-bots/application.yml
+          mv -f ./my-production-configuration/remind-thing/application-prd.yml /home/runner/work/remind-thing/src/main/resources/application-prd.yml
+          mv -f ./my-production-configuration/remind-thing/bot.bot /home/runner/work/remind-thing/src/main/resources/simbot-bots/application.yml
 
       # 安装maven依赖
       - name: Maven Clean Install
