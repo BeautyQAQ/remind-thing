@@ -252,6 +252,6 @@ public class PixivPicture {
      * @return String
      */
     private String newUrl(String urls) {
-        return String.format("https://i.pixiv.re%s", urls.split("https://i.pixiv.cat")[1]);
+        return String.format("https://i.pixiv.re%s", urls.split("https://i.pixiv.re")[1]);
     }
 }
