@@ -68,6 +68,6 @@ jobs:
       - name: Push Docker Image
         run: |
           echo '=====开始上传镜像====='
-          echo '=====开始上传how_article====='
+          echo '=====开始上传====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/remind-thing
           echo '=====镜像上传结束====='
