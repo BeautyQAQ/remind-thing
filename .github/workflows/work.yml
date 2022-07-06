@@ -37,7 +37,8 @@ jobs:
         run: |
           git clone git@github.com:BeautyQAQ/my-production-configuration.git
           pwd
-          ll
+          ls -a
+          ls -a /home/runner/work/
           mv ./my-production-configuration/remind-thing/application-prd.yml ./remind-thing/src/main/resources/application-prd.yml
           mv ./my-production-configuration/remind-thing/bot.bot ./remind-thing/src/main/resources/simbot-bots/bot.bot
 
