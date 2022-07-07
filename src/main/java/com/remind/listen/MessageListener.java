@@ -58,8 +58,7 @@ public class MessageListener {
             return null;
         }
         // 通过get请求调用聊天接口   MsgSender中存在三大送信器，以及非常多的重载方法。
-        final String result = HttpUtil.sendGet(URL,
-                "key=free&appid=0&msg=".concat(commonMsg.getMsgContent().getMsg()));
+        final String result = HttpUtil.sendGet(URL,"key=free&appid=0&msg=".concat(commonMsg.getMsgContent().getMsg()));
         if (StringUtils.hasText(result)) {
             final JSONObject json = JSONObject.parseObject(result);
             if (json.getInteger("result") == 0 && StringUtils.hasText(json.getString("content"))) {
