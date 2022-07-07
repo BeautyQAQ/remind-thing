@@ -5,7 +5,7 @@
 
     <groupId>com.remind</groupId>
     <artifactId>remind-thing</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 
     <name>remind-thing Maven Webapp</name>
 
@@ -18,7 +18,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>aliyun</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -41,7 +41,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories> -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -120,7 +120,7 @@
     </dependencies>
 
     <build>
-        <finalName>remind-thing-1.1-SNAPSHOT</finalName>
+        <finalName>remind-thing-1.2-SNAPSHOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

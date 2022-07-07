@@ -51,26 +51,29 @@ public class MessageListener {
      * @param sender    sender
      */
     private ReplyAble sendMsg(MessageGet commonMsg, MsgSender sender, boolean group) {
-        // log.info("智能聊天中~~~,接收消息：qq={}, msg={}", commonMsg.getAccountInfo().getAccountCode(),
-        //         commonMsg.getMsgContent().getMsg());
-        // // MsgSender中存在三大送信器，以及非常多的重载方法。
-        // // 通过get请求调用聊天接口
-        // final String result = HttpUtil.sendGet(URL,
-        //         "key=free&appid=0&msg=".concat(commonMsg.getMsgContent().getMsg()));
-        // if (StringUtils.hasText(result)) {
-        //     final JSONObject json = JSONObject.parseObject(result);
-        //     if (json.getInteger("result") == 0 && StringUtils.hasText(json.getString("content"))) {
-        //         final String msg = json.getString("content").replace("{br}", "\n");
-        //         log.info("智能聊天中~~~,发送消息：qq={}, msg={}", commonMsg.getAccountInfo().getAccountCode(), msg);
-        //         //发送群消息
-        //         if (group) {
-        //             // 参数1：回复的消息 参数2：是否at当事人
-        //             return Reply.reply(msg, true);
-        //         }
-        //         //发送私聊消息
-        //         sender.SENDER.sendPrivateMsg(commonMsg, msg);
-        //     }
-        // }
+        log.info("智能聊天中~~~,接收消息：qq={}, msg={}", commonMsg.getAccountInfo().getAccountCode(),commonMsg.getMsgContent().getMsg());
+        // 如果消息前缀为"pixiv"中定义的数据,则不进行智能聊天
+        String receiveMsg = commonMsg.getMsgContent().getMsg();
+        if (receiveMsg.startsWith("色图") || receiveMsg.startsWith("涩图")) {
+            return null;
+        }
+        // 通过get请求调用聊天接口   MsgSender中存在三大送信器，以及非常多的重载方法。
+        final String result = HttpUtil.sendGet(URL,
+                "key=free&appid=0&msg=".concat(commonMsg.getMsgContent().getMsg()));
+        if (StringUtils.hasText(result)) {
+            final JSONObject json = JSONObject.parseObject(result);
+            if (json.getInteger("result") == 0 && StringUtils.hasText(json.getString("content"))) {
+                final String msg = json.getString("content").replace("{br}", "\n");
+                log.info("智能聊天中~~~,发送消息：qq={}, msg={}", commonMsg.getAccountInfo().getAccountCode(), msg);
+                //发送群消息
+                if (group) {
+                    // 参数1：回复的消息 参数2：是否at当事人
+                    return Reply.reply(msg, true);
+                }
+                //发送私聊消息
+                sender.SENDER.sendPrivateMsg(commonMsg, msg);
+            }
+        }
         return null;
     }
 
