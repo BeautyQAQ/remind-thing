@@ -69,10 +69,11 @@ jobs:
           password: ${{ secrets.BAIDUYUN_PASSWORD }}
 
       # docker push registry.cn-beijing.aliyuncs.com/liushao-repository/remind-thing
+
+      # sudo docker tag remind-thing-1.4 registry.baidubce.com/liushao-repository/remind-thing
       - name: Push Docker Image
         run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传====='
-          sudo docker tag remind-thing-1.4 registry.baidubce.com/liushao-repository/remind-thing
           docker push registry.baidubce.com/liushao-repository/remind-thing
           echo '=====镜像上传结束====='
