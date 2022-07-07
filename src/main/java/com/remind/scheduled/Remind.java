@@ -93,4 +93,20 @@ public class Remind {
         });
     }
 
+    /**
+     * 测试任务
+     */
+    // @Scheduled(cron = "0 0/1 * * * ?")
+    // public void test() {
+    //     qqSet.forEach(qq -> {
+    //         try {
+    //             log.info("开始加载测试提醒内容~~~");
+    //             // 发送果提醒
+    //             send.privates(qq, "测试提醒，1分钟一次");
+    //         } catch (Exception e) {
+    //             log.error("发送测试提醒异常, qq={}", qq, e);
+    //         }
+    //     });
+    // }
+
 }
