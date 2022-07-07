@@ -61,7 +61,7 @@ jobs:
       # registry: registry.cn-beijing.aliyuncs.com
       # username: ${{ secrets.ALIYUN_USER_NAME }}
       # password: ${{ secrets.ALIYUN_PASSWORD }}
-      - name: Login to Aliyun
+      - name: Login to BAIDUYUN
         uses: docker/login-action@v1
         with:
           registry: registry.baidubce.com
@@ -73,5 +73,6 @@ jobs:
         run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传====='
+          sudo docker tag remind-thing-1.4 registry.baidubce.com/liushao-repository/remind-thing
           docker push registry.baidubce.com/liushao-repository/remind-thing
           echo '=====镜像上传结束====='
