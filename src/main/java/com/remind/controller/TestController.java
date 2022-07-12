@@ -52,4 +52,19 @@ public class TestController {
         }
         return "图片发送成功";
     }
+
+    @GetMapping("/sendOnlyPicture")
+    public String onlyPicture() throws IOException {
+        Connection connection = Jsoup.connect(String.format("https://api.lolicon.app/setu/v2?%s", "r18=1"));
+        ArrayList<Pixiv> arrayPixiv  = send.getPixivs(connection);
+        for (Pixiv pixiv : arrayPixiv) {
+            //获取消息工厂
+            MessageContentBuilder message = messageContentBuilderFactory.getMessageContentBuilder();
+            //新url链接
+            String original = pixiv.getUrls().get("original").split("https://i.pixiv.re")[1];
+            String newUrl = String.format("https://i.pixiv.re%s", original);
+            send.privates(qq, message.image(newUrl).build());
+        }
+        return "仅图片发送成功";
+    }
 }

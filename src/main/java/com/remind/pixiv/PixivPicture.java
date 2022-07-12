@@ -32,7 +32,11 @@ public class PixivPicture {
     //注入一个可以构建合并消息的消息工厂
     private final MiraiMessageContentBuilderFactory factory;
     //图片请求地址
-    private final static String URL = "https://api.lolicon.app/setu/v2?r18=2&%s";
+    private final static String URL = "https://api.lolicon.app/setu/v2?&%s";
+
+    //图片请求地址，r18=2
+    private final static String URL2 = "https://api.lolicon.app/setu/v2?&r18=2&%s";
+
     //每张图片的简介模板
     private final static String INTRODUCE = "画师id:%s\n画师名称:%s\n标题:%s\n标签:%s\n%s\n";
 
@@ -51,6 +55,23 @@ public class PixivPicture {
     @OnGroup
     @OnPrivate
     @Filter(value = "色图", matchType = MatchType.EQUALS, trim = true)
+    public void pixivOnlyPictureR18(@NotNull MsgGet msgGet) {
+        try {
+            Connection connection = Jsoup.connect(String.format(URL, "r18=1"));
+            packageRequestOnlyPicture(connection, msgGet);
+        } catch (Exception e) {
+            exceptionPrompt(msgGet);
+            log.error("pixivOnlyPictureR18接口异常", e);
+        }
+    }
+
+    /**
+     * 随机获取一张R18图片, 带画师信息
+     * 消息内容：色图
+     */
+    @OnGroup
+    @OnPrivate
+    @Filter(value = "色图1", matchType = MatchType.EQUALS, trim = true)
     public void pixivPictureR18(@NotNull MsgGet msgGet) {
         try {
             Connection connection = Jsoup.connect(String.format(URL, "r18=1"));
@@ -68,6 +89,23 @@ public class PixivPicture {
     @OnGroup
     @OnPrivate
     @Filter(value = "涩图", matchType = MatchType.EQUALS, trim = true)
+    public void pixivOnlyPictureMixture(@NotNull MsgGet msgGet) {
+        try {
+            Connection connection = Jsoup.connect(String.format(URL, "r18=2"));
+            packageRequestOnlyPicture(connection, msgGet);
+        } catch (Exception e) {
+            exceptionPrompt(msgGet);
+            log.error("pixivOnlyPictureMixture接口异常", e);
+        }
+    }
+
+    /**
+     * 随机获取一张混合（R18与非R18）图片, 带画师信息
+     * 消息内容：涩图
+     */
+    @OnGroup
+    @OnPrivate
+    @Filter(value = "涩图1", matchType = MatchType.EQUALS, trim = true)
     public void pixivPictureMixture(@NotNull MsgGet msgGet) {
         try {
             Connection connection = Jsoup.connect(String.format(URL, "r18=2"));
@@ -98,9 +136,9 @@ public class PixivPicture {
             if (parameter.contains(" ")) {//标签/返回数量
                 String tag = parameter.split(" ")[0];
                 String num = parameter.split(" ")[1];
-                connection = Jsoup.connect(String.format(URL, String.format("tag=%s&num=%s", tag, num)));
+                connection = Jsoup.connect(String.format(URL2, String.format("tag=%s&num=%s", tag, num)));
             } else {
-                connection = Jsoup.connect(String.format(URL, String.format("tag=%s", parameter)));
+                connection = Jsoup.connect(String.format(URL2, String.format("tag=%s", parameter)));
             }
             packageRequest(connection, msgGet);
         } catch (Exception e) {
@@ -118,9 +156,9 @@ public class PixivPicture {
             Connection connection;
             if (Objects.requireNonNull(msgGet.getText()).contains(" ")) {
                 String num = Objects.requireNonNull(msgGet.getText()).split(" ")[1];
-                connection = Jsoup.connect(String.format(URL, "tag=" + tag[0] + "%7C" + tag[1].split(" ")[0] + "&num=" + num));
+                connection = Jsoup.connect(String.format(URL2, "tag=" + tag[0] + "%7C" + tag[1].split(" ")[0] + "&num=" + num));
             } else {
-                connection = Jsoup.connect(String.format(URL, "tag=" + tag[0] + "%7C" + tag[1]));
+                connection = Jsoup.connect(String.format(URL2, "tag=" + tag[0] + "%7C" + tag[1]));
             }
             packageRequest(connection, msgGet);
         } catch (Exception e) {
@@ -148,7 +186,7 @@ public class PixivPicture {
             String uid = parameter.split(" ")[0];
             String num = parameter.split(" ")[1];
             //使用Jsoup爬取URL链接的Json数据并封装成Bean对象
-            Connection connection = Jsoup.connect(String.format(URL, String.format("uid=%s&num=%s", uid, num)));
+            Connection connection = Jsoup.connect(String.format(URL2, String.format("uid=%s&num=%s", uid, num)));
             packageRequest(connection, msgGet);
         } catch (Exception e) {
             exceptionPrompt(msgGet);
@@ -173,6 +211,7 @@ public class PixivPicture {
         //获取网页的Document对象并设置超时时间和忽略内容类型get请求后使用标签选择器来获取body标签体的内容
         ArrayList<Pixiv> arrayPixiv = send.getPixivs(connection);
         if (msgGet instanceof GroupMsg) {
+            log.info("群聊消息");
             //获取一个Mirai消息内容生成器
             MiraiMessageContentBuilder builder = factory.getMessageContentBuilder();
             //构建合并消息内容
@@ -198,6 +237,52 @@ public class PixivPicture {
                 //新url链接
                 String newUrl = newUrl(pixiv.getUrls().get("original"));
                 send.privateMsgAsync((PrivateMsg) msgGet, message.text(introduce(pixiv)).image(newUrl).build());
+            }
+        }
+    }
+
+    /**
+     * 请求封装方法
+     * 拿到url后执行请求操作
+     * 获取json数据封装成Pixiv对象
+     * 遍历Pixiv对象获取图片链接
+     * 根据图片链接获取到图片
+     * 如果是群聊则执行构建合并消息内容
+     * 如为私聊消息则不构建合并消息内容
+     *
+     * @param connection Connection
+     * @param msgGet     消息父类
+     * @throws IOException 读取失败异常
+     */
+    private void packageRequestOnlyPicture(@NotNull Connection connection, MsgGet msgGet) throws IOException {
+        //获取网页的Document对象并设置超时时间和忽略内容类型get请求后使用标签选择器来获取body标签体的内容
+        ArrayList<Pixiv> arrayPixiv = send.getPixivs(connection);
+        if (msgGet instanceof GroupMsg) {
+            //获取一个Mirai消息内容生成器
+            MiraiMessageContentBuilder builder = factory.getMessageContentBuilder();
+            //构建合并消息内容
+            builder.forwardMessage(forwardBuilder -> {
+                //获取Pixiv对象里面的数据
+                for (Pixiv pixiv : arrayPixiv) {
+                    //先清除一次再构建
+                    builder.clear();
+                    //新url链接
+                    String newUrl = newUrl(pixiv.getUrls().get("original"));
+                    //获取秒为单位的时间戳
+                    String timestamp = String.valueOf(new Date().getTime());
+                    int length = timestamp.length();
+                    int integer = Integer.parseInt(timestamp.substring(0, length - 3));
+                    forwardBuilder.add(msgGet, integer, builder.image(newUrl).build());
+                }
+            });
+            send.groupMsgAsync((GroupMsg) msgGet, builder.build());
+        } else if (msgGet instanceof PrivateMsg) {
+            for (Pixiv pixiv : arrayPixiv) {
+                //获取消息工厂
+                MessageContentBuilder message = messageContentBuilderFactory.getMessageContentBuilder();
+                //新url链接
+                String newUrl = newUrl(pixiv.getUrls().get("original"));
+                send.privateMsgAsync((PrivateMsg) msgGet, message.image(newUrl).build());
             }
         }
     }
