@@ -167,6 +167,7 @@ public class Send {
     public synchronized void groups(GroupMsg msg, MessageContent str) {
         //判断事件id是否存在 防止发送重复消息
         if (!map.containsKey(msg.getId())) {
+            log.info("发送群聊消息");
             //获取当前群号
             String grCode = get.grCode(msg);
             meh.sendGroups(botQQ, grCode, str);
@@ -192,6 +193,7 @@ public class Send {
     public synchronized void groupMsgAsync(GroupMsg msg, MiraiMessageContent str) {
         //判断事件id是否存在 防止发送重复消息
         if (!map.containsKey(msg.getId())) {
+            log.info("发送群聊消息");
             //获取当前群号
             String grCode = get.grCode(msg);
             //获取当前QQ账号
