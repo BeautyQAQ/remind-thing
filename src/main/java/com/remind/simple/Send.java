@@ -195,8 +195,7 @@ public class Send {
             //获取当前群号
             String grCode = get.grCode(msg);
             //获取当前QQ账号
-            String qqCode = get.prCode(msg);
-            meh.sendGroupsAsync(botQQ, qqCode, str);
+            meh.sendGroupsAsync(botQQ, grCode, str);
             //将该事件id添加到map内
             map.put(msg.getId(), msg.getId());
             log.info("EventID:{} Gr:{} Msg:{}", msg.getId(), grCode, str.getMsg());
