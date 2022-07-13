@@ -270,7 +270,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送私聊消息
             bot.getSender().SENDER.sendPrivateMsg(qqCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
@@ -281,7 +281,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送私聊消息
             bot.getSender().SENDER.sendPrivateMsg(qqCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
@@ -292,8 +292,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送群聊消息
             bot.getSender().SENDER.sendGroupMsg(grCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
-            e.printStackTrace();
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
@@ -304,7 +303,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送群组异步消息
             bot.getSender().SENDER.sendGroupMsgAsync(grCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
@@ -315,7 +314,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送私聊异步消息
             bot.getSender().SENDER.sendPrivateMsgAsync(qqCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
@@ -326,7 +325,7 @@ class MessageExceptionHandling {
             //根据指定的bot发送群聊消息
             bot.getSender().SENDER.sendGroupMsg(grCode, str);
         } catch (Exception e) {
-            log.error("{}", "指定Bot账号不存在！");
+            log.error("指定Bot账号不存在！", e);
         }
     }
 
