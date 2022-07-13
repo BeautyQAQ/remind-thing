@@ -5,7 +5,7 @@
 
     <groupId>com.remind</groupId>
     <artifactId>remind-thing</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
 
     <name>remind-thing Maven Webapp</name>
 
@@ -120,7 +120,7 @@
     </dependencies>
 
     <build>
-        <finalName>remind-thing-1.6-SNAPSHOT</finalName>
+        <finalName>remind-thing-1.7-SNAPSHOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

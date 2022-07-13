@@ -140,7 +140,7 @@ public class PixivPicture {
             } else {
                 connection = Jsoup.connect(String.format(URL2, String.format("tag=%s", parameter)));
             }
-            packageRequest(connection, msgGet);
+            packageRequestOnlyPicture(connection, msgGet);
         } catch (Exception e) {
             exceptionPrompt(msgGet);
             log.error("pixivPictureMain接口异常", e);
@@ -160,7 +160,7 @@ public class PixivPicture {
             } else {
                 connection = Jsoup.connect(String.format(URL2, "tag=" + tag[0] + "%7C" + tag[1]));
             }
-            packageRequest(connection, msgGet);
+            packageRequestOnlyPicture(connection, msgGet);
         } catch (Exception e) {
             exceptionPrompt(msgGet);
             log.error("pixivPicture接口异常", e);
@@ -187,7 +187,7 @@ public class PixivPicture {
             String num = parameter.split(" ")[1];
             //使用Jsoup爬取URL链接的Json数据并封装成Bean对象
             Connection connection = Jsoup.connect(String.format(URL2, String.format("uid=%s&num=%s", uid, num)));
-            packageRequest(connection, msgGet);
+            packageRequestOnlyPicture(connection, msgGet);
         } catch (Exception e) {
             exceptionPrompt(msgGet);
             log.error("findAuthorById接口异常", e);
@@ -257,34 +257,14 @@ public class PixivPicture {
     private void packageRequestOnlyPicture(@NotNull Connection connection, MsgGet msgGet) throws IOException {
         //获取网页的Document对象并设置超时时间和忽略内容类型get请求后使用标签选择器来获取body标签体的内容
         ArrayList<Pixiv> arrayPixiv = send.getPixivs(connection);
-        if (msgGet instanceof GroupMsg) {
-            log.info("群聊消息");
-            log.info(msgGet.getId());
-            log.info(msgGet.getText());
-            //获取一个Mirai消息内容生成器
-            MiraiMessageContentBuilder builder = factory.getMessageContentBuilder();
-            //构建合并消息内容
-            builder.forwardMessage(forwardBuilder -> {
-                //获取Pixiv对象里面的数据
-                for (Pixiv pixiv : arrayPixiv) {
-                    //先清除一次再构建
-                    builder.clear();
-                    //新url链接
-                    String newUrl = newUrl(pixiv.getUrls().get("original"));
-                    //获取秒为单位的时间戳
-                    String timestamp = String.valueOf(new Date().getTime());
-                    int length = timestamp.length();
-                    int integer = Integer.parseInt(timestamp.substring(0, length - 3));
-                    forwardBuilder.add(msgGet, integer, builder.image(newUrl).build());
-                }
-            });
-            send.groupMsgAsync((GroupMsg) msgGet, builder.build());
-        } else if (msgGet instanceof PrivateMsg) {
-            for (Pixiv pixiv : arrayPixiv) {
-                //获取消息工厂
-                MessageContentBuilder message = messageContentBuilderFactory.getMessageContentBuilder();
-                //新url链接
-                String newUrl = newUrl(pixiv.getUrls().get("original"));
+        for (Pixiv pixiv : arrayPixiv) {
+            //获取消息工厂
+            MessageContentBuilder message = messageContentBuilderFactory.getMessageContentBuilder();
+            //新url链接
+            String newUrl = newUrl(pixiv.getUrls().get("original"));
+            if (msgGet instanceof GroupMsg) {
+                send.groups((GroupMsg) msgGet, message.image(newUrl).build());
+            } else if (msgGet instanceof PrivateMsg) {
                 send.privateMsgAsync((PrivateMsg) msgGet, message.image(newUrl).build());
             }
         }
