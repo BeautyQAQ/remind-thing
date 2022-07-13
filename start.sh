@@ -1,0 +1,1 @@
+docker-compose -f ./doc/remind-thing.yml up -d

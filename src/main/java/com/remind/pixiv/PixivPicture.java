@@ -258,6 +258,9 @@ public class PixivPicture {
         //获取网页的Document对象并设置超时时间和忽略内容类型get请求后使用标签选择器来获取body标签体的内容
         ArrayList<Pixiv> arrayPixiv = send.getPixivs(connection);
         if (msgGet instanceof GroupMsg) {
+            log.info("群聊消息");
+            log.info(msgGet.getId());
+            log.info(msgGet.getText());
             //获取一个Mirai消息内容生成器
             MiraiMessageContentBuilder builder = factory.getMessageContentBuilder();
             //构建合并消息内容
