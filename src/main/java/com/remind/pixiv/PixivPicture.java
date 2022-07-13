@@ -260,11 +260,12 @@ public class PixivPicture {
         for (Pixiv pixiv : arrayPixiv) {
             //获取消息工厂
             MessageContentBuilder message = messageContentBuilderFactory.getMessageContentBuilder();
+            MiraiMessageContentBuilder builder = factory.getMessageContentBuilder();
             //新url链接
             String newUrl = newUrl(pixiv.getUrls().get("original"));
             if (msgGet instanceof GroupMsg) {
                 log.info("群聊消息图片路径={}", newUrl);
-                send.groups((GroupMsg) msgGet, message.imageUrl(newUrl).build());
+                send.groupMsgAsync((GroupMsg) msgGet, builder.imageUrl(newUrl, false).build());
             } else if (msgGet instanceof PrivateMsg) {
                 send.privateMsgAsync((PrivateMsg) msgGet, message.image(newUrl).build());
             }
