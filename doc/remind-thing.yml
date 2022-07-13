@@ -11,4 +11,4 @@ services:
       - "SPRING_PROFILES_ACTIVE=prd"
       - TZ=Asia/Shanghai
     volumes:
-      - ../log/:/logs/
+      - ../../logs/:/logs/
